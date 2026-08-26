@@ -1,0 +1,123 @@
+case_id,title,symptom,topology_note,show_output,expected_fault,osi_layer,concept,severity
+CASE-001,VLAN Connectivity Issue - Server Unreachable,PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.,PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.,"show vlan brief
+VLAN Name Status Ports
+10 Data active Fa0/2
+30 Servers active Fa0/5
+
+switchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1
+show interfaces trunk
+Port Mode Encapsulation Status Native vlan
+Fa0/1 on 802.1q trunking 1",Server port not assigned to correct VLAN (still in default VLAN 1),Layer 2,VLAN,High
+CASE-002,Default Gateway Misconfiguration,PC can ping other devices on the same subnet but cannot reach any remote network.,"PC connected to Switch1, Switch1 uplinks to Router1 which routes between VLAN 10 and VLAN 20.","show ip interface brief
+FastEthernet0/0 192.168.10.1 YES manual up up
+PC ipconfig: IP 192.168.10.50 Gateway 192.168.20.1",PC configured with wrong default gateway (points to a different subnet),Layer 3,Gateway,High
+CASE-003,DHCP Pool Exhaustion,New PCs on VLAN 20 fail to obtain an IP address; existing PCs work fine.,Router1 configured as DHCP server for VLAN 20 (192.168.20.0/27).,"show ip dhcp pool VLAN20
+Pool VLAN20 :
+ Utilization mark high = 100 %
+ Total addresses = 30
+ Leased addresses = 30
+ Pending event = none",DHCP pool exhausted - no free addresses left in the scope,Layer 3 / Application,DHCP,Medium
+CASE-004,DNS Resolution Failure,Users can ping the web server by IP address but cannot browse to it using its hostname.,"PC on VLAN 10, DNS server configured as 8.8.8.8 in the DHCP scope but internal DNS is 192.168.10.5.","ipconfig /all
+DNS Servers: 8.8.8.8
+nslookup intranet.local
+*** 8.8.8.8 can't find intranet.local: Non-existent domain",PC is using an external DNS server that has no record for the internal hostname,Layer 7,DNS,Medium
+CASE-005,Missing Static Route Between Sites,"HQ site cannot reach Branch site subnet 172.16.20.0/24, but the WAN link is up.",R1 (HQ) <-> Serial link <-> R2 (Branch). R2 LAN = 172.16.20.0/24.,"show ip route
+Gateway of last resort is not set
+C 172.16.10.0/24 is directly connected, GigabitEthernet0/0
+C 10.0.0.0/30 is directly connected, Serial0/0/0
+(No route to 172.16.20.0/24)",Missing static/dynamic route for the branch LAN subnet on HQ router,Layer 3,Routing,Critical
+CASE-006,ACL Blocking Legitimate Traffic,Users in VLAN 10 cannot access the file server in VLAN 30 even though routing is correctly configured.,Router1 has an inbound ACL on the VLAN 30 SVI.,"show access-lists
+Extended IP access list BLOCK_VLAN10
+ 10 deny ip 192.168.10.0 0.0.0.255 any
+ 20 permit ip any any (0 matches)",Overly broad deny statement in ACL blocks all VLAN 10 traffic to VLAN 30,Layer 3 / Layer 4,ACL,High
+CASE-007,NAT Overload Not Translating Outbound Traffic,Internal hosts cannot reach the internet; internal-to-internal traffic works fine.,Router1 connects internal LAN (192.168.1.0/24) to ISP via Serial0/1/0.,"show ip nat translations
+(empty)
+show run | include nat
+ip nat inside source list 1 interface Serial0/1/0 overload
+(interface GigabitEthernet0/0 missing 'ip nat inside')","Inside interface not marked with 'ip nat inside', so NAT overload never triggers",Layer 3,NAT,High
+CASE-008,Wireless Client Cannot Associate with AP,"Laptop detects the SSID 'CorpWiFi' but fails to connect, showing 'incorrect password' repeatedly even with the correct passphrase.","AP1 broadcasts SSID CorpWiFi using WPA2-PSK, connected to Switch1 access port.","AP1 config: authentication WPA2 PSK ascii CorpPass123
+Client security profile: WPA2-Enterprise selected on laptop instead of WPA2-Personal",Client wireless profile mismatched security type (Enterprise vs Personal/PSK),Layer 2,Wireless,Medium
+CASE-009,Duplicate IP Address Conflict,Two PCs on VLAN 10 intermittently lose connectivity; Windows shows 'IP address conflict' popup on one machine.,"Static IP assigned on PC-A (192.168.10.20), DHCP scope on same subnet also includes .20 in its range.","show ip dhcp conflict
+IP address Detection method Detection time
+192.168.10.20 Ping Mon Mar 10 09:15:20","Statically assigned address overlaps with DHCP scope range, causing duplicate IP conflict",Layer 3,DHCP,Medium
+CASE-010,Incorrect Subnet Mask Causing Isolated Host,"One PC on VLAN 10 cannot communicate with any other device, even those on the same VLAN.",VLAN 10 subnet is 192.168.10.0/24. PC statically configured.,"ipconfig
+IPv4 Address: 192.168.10.55
+Subnet Mask: 255.255.255.192
+Default Gateway: 192.168.10.1",Subnet mask misconfigured (/26 instead of /24) places host and gateway on different logical subnets,Layer 3,Gateway,High
+CASE-011,Trunk Native VLAN Mismatch,Intermittent connectivity issues and CDP native VLAN mismatch warnings appear in switch logs between two switches.,Switch1 and Switch2 connected via a trunk link (Gi0/1 on both).,"Switch1: show interfaces trunk -> Native vlan: 1
+Switch2: show interfaces trunk -> Native vlan: 99
+%CDP-4-NATIVE_VLAN_MISMATCH: Native VLAN mismatch discovered on GigabitEthernet0/1",Native VLAN mismatch between trunk ports on Switch1 and Switch2,Layer 2,VLAN,Medium
+CASE-012,Interface Administratively Down,An entire branch office lost connectivity after a maintenance window.,R2 WAN interface Serial0/0/0 connects branch to HQ.,"show ip interface brief
+Serial0/0/0 10.0.0.2 YES manual administratively down down",WAN interface was left administratively shut down after maintenance,Layer 1 / Layer 2,Routing,Critical
+CASE-013,Missing VLAN on Trunk Allowed List,"New VLAN 40 (Guest) created for a project, but guest devices cannot reach the guest DHCP server on the other switch.",Switch1 and Switch2 connected via trunk Gi0/2. VLAN 40 created on both switches.,"show interfaces trunk
+Port Vlans allowed on trunk
+Gi0/2 1,10,20,30",VLAN 40 not included in the trunk's allowed VLAN list,Layer 2,VLAN,Medium
+CASE-014,Router-on-a-Stick Subinterface Misconfigured,Inter-VLAN routing fails for VLAN 30 only; VLAN 10 and VLAN 20 route correctly.,"Router1 Gi0/0 has subinterfaces Gi0/0.10, Gi0/0.20, Gi0/0.30 for router-on-a-stick.","show run interface Gi0/0.30
+encapsulation dot1Q 3
+ip address 192.168.30.1 255.255.255.0",Subinterface encapsulation uses wrong dot1Q VLAN tag (3 instead of 30),Layer 3,Routing,High
+CASE-015,DHCP Relay (ip helper-address) Missing,Devices in VLAN 20 do not receive an IP address; DHCP server is centralized in VLAN 10.,Router1 has SVI for VLAN 20; central DHCP server sits in VLAN 10 at 192.168.10.5.,"show run interface vlan20
+interface Vlan20
+ ip address 192.168.20.1 255.255.255.0
+(no ip helper-address statement present)",Missing 'ip helper-address' on VLAN 20 SVI to relay DHCP requests to the central server,Layer 3,DHCP,High
+CASE-016,Access Port Configured as Trunk,PC connected to Switch1 Fa0/8 cannot obtain an IP address and receives a 169.254.x.x address.,Fa0/8 intended as a simple access port for a single PC.,"show interfaces switchport Fa0/8
+Administrative Mode: trunk
+Operational Mode: trunk","Port accidentally configured as a trunk instead of access, blocking normal DHCP/broadcast behaviour",Layer 2,VLAN,Medium
+CASE-017,Wrong DNS Server Pushed by DHCP,All PCs in VLAN 10 fail to resolve internal hostnames after a DHCP scope change.,Router1 DHCP pool VLAN10 was recently edited by an admin.,"show run | section ip dhcp pool VLAN10
+network 192.168.10.0 255.255.255.0
+default-router 192.168.10.1
+dns-server 203.0.113.5",DHCP pool pushes an incorrect external DNS server instead of the internal DNS server (192.168.10.5),Layer 7,DNS,Medium
+CASE-018,Asymmetric Routing Causing Dropped Return Traffic,Ping from Branch to HQ server succeeds but the HTTP session to the same server times out.,Dual WAN links between Branch and HQ; static routes configured differently on each router.,"R1 show ip route -> 172.16.20.0/24 via Serial0/0/0
+R2 show ip route -> 172.16.10.0/24 via Serial0/1/0
+(return path uses a different link than outbound, ACL on Serial0/1/0 blocks established TCP)",Asymmetric routing combined with a stateful-like ACL on the return path drops mid-session TCP packets,Layer 3 / Layer 4,Routing,High
+CASE-019,ACL Applied to Wrong Interface Direction,Internal users cannot reach the internet even though the NAT and ACL rules look correct on paper.,ACL 101 meant to filter outbound internet traffic on Serial0/1/0.,"show run interface Serial0/1/0
+ip access-group 101 in
+(ACL 101 was designed for traffic leaving the router, should be applied 'out' or reversed)","ACL applied in the wrong direction (in vs out), blocking traffic that should be permitted",Layer 3,ACL,High
+CASE-020,NAT Pool Exhausted,"During peak hours, some internal users lose internet access while others remain connected.",Router1 uses a NAT pool (not overload) for translating internal addresses.,"show ip nat statistics
+Total active translations: 20 (20 static, 0 dynamic; 0 extended)
+Pool NAT-POOL: netmask 255.255.255.240
+ start 203.0.113.10 end 203.0.113.20
+ total addresses 11 allocated 11 (100%) misses 47",NAT pool has too few public addresses for the number of internal hosts needing translation,Layer 3,NAT,Medium
+CASE-021,Wireless Channel Overlap Causing Slow Speeds,Wi-Fi in the office is connected but extremely slow and drops frequently during business hours.,"Three APs (AP1, AP2, AP3) cover adjacent areas of the same floor.","AP1 channel: 6
+AP2 channel: 6
+AP3 channel: 6
+(all APs using the same 2.4GHz channel, high co-channel interference)",All access points configured on the same overlapping Wi-Fi channel causing interference,Layer 1 / Layer 2,Wireless,Low
+CASE-022,Missing Default Route on Edge Router,"Internal users can reach all internal subnets but nothing on the internet, even though NAT is configured correctly.",Router1 edge router connects to ISP via Serial0/1/0.,"show ip route
+Gateway of last resort is not set
+C 192.168.1.0/24 is directly connected, GigabitEthernet0/0
+C 203.0.113.0/30 is directly connected, Serial0/1/0
+(no default route / 0.0.0.0/0 entry)","No default route (0.0.0.0/0) configured pointing to the ISP, so router drops all internet-bound traffic",Layer 3,Routing,Critical
+CASE-023,Port Security Shutting Down Access Port,PC in the lab suddenly lost network connectivity after being moved to a different desk.,Fa0/12 has port security configured with a single allowed MAC address (sticky).,"show port-security interface Fa0/12
+Port Security: Enabled
+Port Status: Secure-shutdown
+Violation Mode: Shutdown
+Last Source Address:Vlan: 00AA.11BB.22CC:10",Port security violation triggered err-disable state after a new device's MAC address appeared on the port,Layer 2,VLAN,Medium
+CASE-024,Incorrect ACL Wildcard Mask,ACL intended to permit only 192.168.10.0/24 to the server is unexpectedly permitting a much larger range of addresses.,ACL 10 applied on the server-facing SVI.,"show access-lists 10
+Standard IP access list 10
+ 10 permit 192.168.10.0 0.0.15.255","Wildcard mask 0.0.15.255 is incorrect for a /24 network; should be 0.0.0.255, permitting a much wider range",Layer 3,ACL,High
+CASE-025,DNS Server Interface Reachability Issue,"All hostname resolution fails company-wide, but internet browsing by IP still works.",Internal DNS server (192.168.10.5) is a VM on VLAN 10; recently migrated to a new host.,"ping 192.168.10.5
+Request timed out. (4 attempts)
+show ip interface brief on Switch1 -> Fa0/5 (DNS server port) down down","Physical/link-layer issue on the DNS server's switch port after migration, making DNS server unreachable",Layer 1 / Layer 7,DNS,Critical
+CASE-026,Overlapping Static and DHCP Gateway Values,"Half of the PCs on VLAN 10 can reach the internet, the other half (statically configured) cannot.",VLAN 10 default gateway is Router1 SVI at 192.168.10.1.,"Static PCs ipconfig -> IPv4 Address: 192.168.10.50 /24 Default Gateway: 192.168.10.254
+Router1 show ip interface brief -> Vlan10 192.168.10.1 up up
+(192.168.10.254 is not assigned to any router interface)",Statically configured PCs point to a non-existent gateway address (192.168.10.254) instead of the router's actual SVI,Layer 3,Gateway,High
+CASE-027,NAT Static Mapping Conflict,"External users cannot reach the internal web server via the public IP, connection resets immediately.",Static NAT configured to map public 203.0.113.50 to internal web server 192.168.1.100.,"show run | include ip nat inside source static
+ip nat inside source static 192.168.1.100 203.0.113.50
+ip nat inside source static 192.168.1.101 203.0.113.50","Duplicate static NAT mapping - two internal hosts mapped to the same public IP, causing conflict",Layer 3,NAT,High
+CASE-028,Wireless AP Not Broadcasting SSID,Employees report that the corporate SSID has disappeared from their device Wi-Fi lists this morning.,AP2 covers the second-floor east wing.,"AP2 config: dot11 ssid CorpWiFi
+ broadcast-ssid disabled
+(SSID broadcast recently toggled off during a config change)","SSID broadcast was disabled on the access point, hiding the network from normal device scans",Layer 2,Wireless,Low
+CASE-029,Route Summarization Blackhole,A specific branch subnet (172.16.25.0/24) is unreachable while the rest of the branch network works fine.,HQ router summarizes branch routes as 172.16.16.0/20 pointing to Branch router.,"show ip route
+O 172.16.16.0/20 [110/65] via 10.0.0.2
+(no more-specific route exists for 172.16.25.0/24 at Branch, traffic blackholed after summarization)","Route summarization advertises a supernet that includes an address space not actually present at the branch, creating a routing black hole",Layer 3,Routing,High
+CASE-030,Incorrect VLAN Assignment on Voice Port,IP phone registers correctly but the PC connected to the phone's pass-through port cannot get on the data VLAN.,Fa0/15 configured for an IP phone with a PC daisy-chained behind it.,"show run interface Fa0/15
+switchport voice vlan 50
+(switchport access vlan command missing - port defaults to VLAN 1 for data)","Voice VLAN configured correctly but data VLAN for the access (PC) side was never set, defaulting to VLAN 1",Layer 2,VLAN,Medium
+CASE-031,Default Gateway on Wrong Subnet,PCs in VLAN 20 can ping each other but cannot reach their default gateway or any other subnet.,VLAN 20 subnet is 192.168.20.0/24. Router1 SVI Vlan20 is 192.168.20.1.,"ipconfig /all
+IPv4 Address: 192.168.20.10
+Subnet Mask: 255.255.255.0
+Default Gateway: 192.168.30.1
+Router1 show ip interface brief -> Vlan20 192.168.20.1 up up",Default gateway (192.168.30.1) is on a different subnet than the host (192.168.20.0/24),Layer 3,Gateway,High
+CASE-032,Entire DHCP Scope Excluded,New devices in VLAN 30 cannot get an IP address and fall back to a 169.254.x.x automatic address.,Router1 is the DHCP server for VLAN 30 (192.168.30.0/24).,"show run | section ip dhcp pool VLAN30
+ network 192.168.30.0 255.255.255.0
+ip dhcp excluded-address 192.168.30.1 192.168.30.254
+(entire pool range excluded - no usable addresses remain)","The DHCP excluded-address range covers the whole scope, leaving no addresses to lease",Layer 3,DHCP,High

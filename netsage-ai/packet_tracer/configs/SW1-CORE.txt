@@ -1,0 +1,76 @@
+! SW1-CORE - Core Layer 2/3 Switch
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname SW1-CORE
+!
+! VLAN database
+!
+! VLANs: 10 (Admin), 20 (Users), 30 (Servers), 40 (Guest), 50 (Management)
+vlan 10
+ name ADMIN
+!
+vlan 20
+ name USERS
+!
+vlan 30
+ name SERVERS
+!
+vlan 40
+ name GUEST
+!
+vlan 50
+ name MANAGEMENT
+!
+! Interface range access ports - Assignment to VLANs
+!
+! Access ports matching the physical topology
+interface Fa0/1
+ switchport mode access
+ switchport access vlan 10
+!
+interface Fa0/2
+ switchport mode access
+ switchport access vlan 20
+!
+interface Fa0/3
+ switchport mode access
+ switchport access vlan 20
+!
+interface Fa0/4
+ switchport mode access
+ switchport access vlan 10
+!
+interface Fa0/5
+ switchport mode access
+ switchport access vlan 30
+!
+interface Fa0/6
+ switchport mode access
+ switchport access vlan 40
+!
+! Trunk link to R1-EDGE (Gi0/0) and other switches
+! Carries all VLANs 10, 20, 30, 40, 50
+interface Gi0/1
+ description Trunk to R1-EDGE
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+!
+! Trunk link to SW2-ACCESS
+interface Gi0/2
+ description Trunk to SW2-ACCESS
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+!
+! Trunk link to SW3-ACCESS
+interface Gi0/3
+ description Trunk to SW3-ACCESS
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+!
+! Uplink to AP1-GUEST (Wireless)
+interface Gi0/24
+ description Uplink to AP1-GUEST
+ switchport mode access
+ switchport access vlan 40
+!
+! End

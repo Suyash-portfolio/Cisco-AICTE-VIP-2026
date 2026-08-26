@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — NetSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="eyebrow">Program Statistics</div>
+  <h1>Dashboard</h1>
+  <p class="lede">Live statistics computed from the case dataset and the stored human review decisions.</p>
+</div>
+
+<div class="grid grid-3" id="metric-tiles">
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-total-cases">—</div>
+    <div class="metric-label">Total Cases</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-reviewed">—</div>
+    <div class="metric-label">Cases Reviewed</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-agreement">—</div>
+    <div class="metric-label">AI Agreement</div>
+    <div class="metric-sub">Accepted ÷ Reviewed × 100</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-accepted">—</div>
+    <div class="metric-label">Accepted</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-edited">—</div>
+    <div class="metric-label">Edited</div>
+  </div>
+  <div class="card metric-card">
+    <div class="metric-value" id="metric-rejected">—</div>
+    <div class="metric-label">Rejected</div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top:18px;">
+  <div class="card">
+    <h3>Problems by Category</h3>
+    <div class="chart-wrap"><canvas id="chart-categories"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>Review Results</h3>
+    <div class="chart-wrap"><canvas id="chart-decisions"></canvas></div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-top:18px;">
+  <div class="card">
+    <h3>Severity</h3>
+    <div class="chart-wrap"><canvas id="chart-severity"></canvas></div>
+  </div>
+  <div class="card">
+    <h3>AI Mode</h3>
+    <p id="ai-mode-detail" class="field-hint" style="font-size:13px;"></p>
+    <div id="corrections-summary" style="margin-top:10px;"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

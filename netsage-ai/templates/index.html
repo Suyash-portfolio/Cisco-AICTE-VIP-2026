@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}NetSage AI — AI Network Troubleshooting Assistant{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">Cisco Packet Tracer Lab Assistant</div>
+    <h1>NetSage AI</h1>
+    <p class="lede-title">AI Network Troubleshooting Assistant</p>
+    <p class="lede">
+      NetSage AI helps students identify common Cisco Packet Tracer network problems
+      using symptoms and command output.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('diagnose_page') }}" class="btn btn-primary">Start Diagnosis</a>
+      <a href="{{ url_for('cases_page') }}" class="btn btn-outline">View Cases</a>
+      <a href="{{ url_for('diagnose_page') }}?case=CASE-001&run=1" class="btn btn-dark">Try Demo Case</a>
+    </div>
+    <div class="mode-badge" id="home-mode-badge">
+      Demo AI Mode — Using predefined AI responses for reliable classroom demonstration.
+    </div>
+  </div>
+</section>
+
+<div class="notice-banner">
+  <span>⚠</span>
+  <span><strong>Educational lab use only —</strong> NetSage AI only suggests fixes. A human
+  must review every diagnosis before any configuration change is made.</span>
+</div>
+
+<section class="card">
+  <h3>Workflow</h3>
+  <p style="margin-bottom:18px;">Every diagnosis follows the same path — the AI never applies a change by itself.</p>
+  <div class="workflow-strip">
+    <div class="workflow-step"><div class="wf-num">1</div><div class="wf-label">Problem</div></div>
+    <div class="workflow-arrow">↓</div>
+    <div class="workflow-step"><div class="wf-num">2</div><div class="wf-label">Evidence</div></div>
+    <div class="workflow-arrow">↓</div>
+    <div class="workflow-step"><div class="wf-num">3</div><div class="wf-label">AI Diagnosis</div></div>
+    <div class="workflow-arrow">↓</div>
+    <div class="workflow-step"><div class="wf-num">4</div><div class="wf-label">Rule Check</div></div>
+    <div class="workflow-arrow">↓</div>
+    <div class="workflow-step"><div class="wf-num">5</div><div class="wf-label">Human Review</div></div>
+    <div class="workflow-arrow">↓</div>
+    <div class="workflow-step"><div class="wf-num">6</div><div class="wf-label">Fix & Verify</div></div>
+  </div>
+</section>
+
+<div class="grid grid-3" style="margin-top:18px;">
+  <div class="card">
+    <h3>AI Diagnosis</h3>
+    <p style="font-size:13.5px;">Finds the likely cause of a network problem.</p>
+  </div>
+  <div class="card">
+    <h3>Rule Checker</h3>
+    <p style="font-size:13.5px;">Checks common configuration mistakes.</p>
+  </div>
+  <div class="card">
+    <h3>Human Review</h3>
+    <p style="font-size:13.5px;">Allows a student to accept, edit, or reject the AI result.</p>
+  </div>
+</div>
+
+<section class="card" id="how-it-works" style="margin-top:18px;">
+  <h3>How It Works</h3>
+  <div class="steps">
+    <div class="step"><b>Step 1.</b> User provides the network problem.</div>
+    <div class="step"><b>Step 2.</b> System checks the Cisco evidence.</div>
+    <div class="step"><b>Step 3.</b> AI suggests the likely cause.</div>
+    <div class="step"><b>Step 4.</b> Python rule checker performs deterministic checks.</div>
+    <div class="step"><b>Step 5.</b> Human reviews the result.</div>
+    <div class="step"><b>Step 6.</b> Network is fixed and verified.</div>
+  </div>
+  <div style="text-align:center;margin-top:18px;">
+    <a class="btn btn-dark btn-block" href="{{ url_for('diagnose_page') }}?case=CASE-001&run=1">Start Demo →</a>
+    <p class="field-hint" style="margin-top:8px;">Opens CASE-001 and runs the full diagnosis automatically. Takes about 5 minutes to present.</p>
+  </div>
+</section>
+
+<section class="card" style="margin-top:18px;">
+  <h3>About This Project</h3>
+  <p style="font-size:13.5px;">
+    NetSage AI is a lab-oriented troubleshooting assistant for Cisco Packet Tracer coursework.
+    It follows the principle: <strong>AI suggests → Evidence supports → Human reviews → Fix → Verify</strong>.
+    The system currently runs in <strong>{{ ai_mode|upper }}</strong> mode.
+  </p>
+</section>
+{% endblock %}

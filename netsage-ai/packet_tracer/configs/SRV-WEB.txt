@@ -1,0 +1,17 @@
+! SRV-WEB - Internal Web Server
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname SRV-WEB
+!
+! Web server connected to VLAN 30 (Servers)
+! IP address: 192.168.30.100
+!
+! Packet Tracer Server-PT desktop configuration:
+! Mask: 255.255.255.0
+! Gateway: 192.168.30.1
+! DNS: 192.168.10.5
+! HTTP service: ON
+! The server is reachable at 192.168.30.100 from any VLAN
+! via the router-on-a-stick inter-VLAN routing.
+!
+! End

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Troubleshooting Cases — NetSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="eyebrow">Dataset</div>
+  <h1>Troubleshooting Cases</h1>
+  <p class="lede">32 realistic Cisco / Packet Tracer cases across VLAN, Gateway, DHCP, DNS,
+  Routing, ACL, NAT, and Wireless. Click a row to see the evidence and diagnose it.</p>
+</div>
+
+<div class="filter-bar">
+  <select id="filter-category">
+    <option value="">All Categories</option>
+    <option>VLAN</option><option>Gateway</option><option>DHCP</option><option>DNS</option>
+    <option>Routing</option><option>ACL</option><option>NAT</option><option>Wireless</option>
+  </select>
+  <select id="filter-severity">
+    <option value="">All Severities</option>
+    <option>Low</option><option>Medium</option><option>High</option><option>Critical</option>
+  </select>
+  <span id="result-count" class="tag" style="margin-left:auto;align-self:center;"></span>
+</div>
+
+<div class="card" style="padding:0;overflow:hidden;">
+  <table id="cases-table">
+    <thead>
+      <tr>
+        <th>Case</th><th>Problem</th><th>Category</th><th>Severity</th>
+      </tr>
+    </thead>
+    <tbody id="cases-tbody"></tbody>
+  </table>
+</div>
+
+<div class="panel-overlay" id="panel-overlay"></div>
+<div class="case-detail-panel" id="case-detail-panel">
+  <button class="panel-close" id="panel-close">✕</button>
+  <div id="panel-content"></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/cases.js') }}"></script>
+{% endblock %}

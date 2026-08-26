@@ -1,0 +1,100 @@
+! R1-EDGE - Core Router / Edge Router
+! Cisco Packet Tracer NetSage AI Project
+! 
+! Interface mapping:
+!   Gi0/0 - Trunk to SW1-CORE
+!   Gi0/1 - WAN link to R2-ISP
+
+!
+! Basic hostname
+hostname R1-EDGE
+
+!
+! Router-on-a-stick subinterfaces
+!
+interface Gi0/0
+ description Trunk to SW1-CORE
+ no shutdown
+!
+interface Gi0/0.10
+ description ADMIN VLAN 10
+ encapsulation dot1Q 10
+ ip address 192.168.10.1 255.255.255.0
+ ip nat inside
+!
+interface Gi0/0.20
+ description USERS VLAN 20
+ encapsulation dot1Q 20
+ ip address 192.168.20.1 255.255.255.0
+ ip nat inside
+!
+interface Gi0/0.30
+ description SERVERS VLAN 30
+ encapsulation dot1Q 30
+ ip address 192.168.30.1 255.255.255.0
+ ip nat inside
+!
+interface Gi0/0.40
+ description GUEST VLAN 40
+ encapsulation dot1Q 40
+ ip address 192.168.40.1 255.255.255.0
+ ip nat inside
+ ip access-group 110 in
+!
+interface Gi0/0.50
+ description MANAGEMENT VLAN 50
+ encapsulation dot1Q 50
+ ip address 192.168.50.1 255.255.255.0
+ ip nat inside
+!
+! Reserve gateway and static-address ranges
+ip dhcp excluded-address 192.168.10.1 192.168.10.20
+ip dhcp excluded-address 192.168.20.1 192.168.20.20
+ip dhcp excluded-address 192.168.30.1 192.168.30.20
+!
+! DHCP Server configuration
+!
+ip dhcp pool VLAN10
+ network 192.168.10.0 255.255.255.0
+ default-router 192.168.10.1
+ dns-server 192.168.10.5
+!
+ip dhcp pool VLAN20
+ network 192.168.20.0 255.255.255.0
+ default-router 192.168.20.1
+ dns-server 192.168.10.5
+!
+ip dhcp pool VLAN30
+ network 192.168.30.0 255.255.255.0
+ default-router 192.168.30.1
+ dns-server 192.168.10.5
+!
+ip dhcp pool VLAN40
+ network 192.168.40.0 255.255.255.0
+ default-router 192.168.40.1
+ dns-server 192.168.10.5
+!
+! One NAT ACL for all internal VLANs
+access-list 100 permit 192.168.10.0 0.0.0.255
+access-list 100 permit 192.168.20.0 0.0.0.255
+access-list 100 permit 192.168.30.0 0.0.0.255
+access-list 100 permit 192.168.40.0 0.0.0.255
+access-list 100 permit 192.168.50.0 0.0.0.255
+ip nat inside source list 100 interface GigabitEthernet0/1 overload
+!
+! Guest VLAN isolation
+access-list 110 deny ip 192.168.40.0 0.0.0.255 192.168.10.0 0.0.0.255
+access-list 110 deny ip 192.168.40.0 0.0.0.255 192.168.20.0 0.0.0.255
+access-list 110 deny ip 192.168.40.0 0.0.0.255 192.168.30.0 0.0.0.255
+access-list 110 permit ip 192.168.40.0 0.0.0.255 any
+!
+! Interface Gi0/1 - WAN/ISP link
+!
+interface Gi0/1
+ description WAN/ISP link
+ ip address 203.0.113.1 255.255.255.252
+ ip nat outside
+ no shutdown
+ip route 0.0.0.0 0.0.0.0 203.0.113.2
+!
+! End

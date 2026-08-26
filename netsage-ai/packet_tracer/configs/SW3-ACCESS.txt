@@ -1,0 +1,61 @@
+! SW3-ACCESS - Access Switch
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname SW3-ACCESS
+!
+! VLANs: 10 (Admin), 20 (Users), 30 (Servers), 40 (Guest), 50 (Management)
+vlan 10
+ name ADMIN
+!
+vlan 20
+ name USERS
+!
+vlan 30
+ name SERVERS
+!
+vlan 40
+ name GUEST
+!
+vlan 50
+ name MANAGEMENT
+!
+! Access ports
+!
+! Admin VLAN 10
+interface range Fa0/1 - Fa0/4
+ switchport mode access
+ switchport access vlan 10
+!
+! Users VLAN 20
+interface range Fa0/5 - Fa0/8
+ switchport mode access
+ switchport access vlan 20
+!
+! Servers VLAN 30
+interface range Fa0/9 - Fa0/12
+ switchport mode access
+ switchport access vlan 30
+!
+! Guest VLAN 40
+interface range Fa0/13 - Fa0/16
+ switchport mode access
+ switchport access vlan 40
+!
+! Management VLAN 50
+interface range Fa0/17 - Fa0/20
+ switchport mode access
+ switchport access vlan 50
+!
+! Trunk to SW1-CORE
+interface Gi0/1
+ description Trunk to SW1-CORE
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,30,40,50
+!
+! Uplink to AP1-GUEST
+interface Gi0/24
+ description Uplink to AP1-GUEST
+ switchport mode access
+ switchport access vlan 40
+!
+! End

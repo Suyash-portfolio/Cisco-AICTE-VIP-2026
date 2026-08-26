@@ -1,0 +1,31 @@
+! AP1-GUEST - Wireless Access Point (Guest Network)
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname AP1-GUEST
+!
+! Wireless configuration for Guest network
+!
+! SSID: CorpGuest
+! Security: WPA2-PSK
+! VLAN: 40 (Guest)
+!
+! In Packet Tracer, the AP connects to a switch access port
+! and broadcasts a wireless SSID.
+!
+! Wireless interface config ( Packet Tracer specific):
+!
+! dot11 ssid CorpGuest
+!  authentication mode wpa2
+!  encryption mode aes
+!  guest-mode
+! ssid CorpGuest
+!  vlan 40
+!
+! Since Packet Tracer AP config is typically done via the GUI,
+! the key settings are:
+! - SSID: CorpGuest
+! - Security: WPA2-PSK password: GuestPass123
+! - VLAN mapping: 40
+! - Interface: GigabitEthernet0/0 connected to switch access port in VLAN 40
+!
+! End

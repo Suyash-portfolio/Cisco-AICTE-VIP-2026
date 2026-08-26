@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Diagnose — NetSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="eyebrow">Troubleshoot</div>
+  <h1>Diagnose a Network Problem</h1>
+  <p class="lede">Pick a predefined case, or enter your own problem. NetSage AI runs the
+  rule checker and the AI diagnosis, then asks you to review the result.</p>
+</div>
+
+<div class="diagnose-layout">
+  <div>
+    <div class="card">
+      <h3>Select Troubleshooting Case</h3>
+      <p class="field-hint" style="margin-top:0;">Easiest way to demonstrate the project — pick a case and diagnose it.</p>
+      <select id="case-select">
+        <option value="">Select a case...</option>
+      </select>
+      <button class="btn btn-primary btn-block" id="case-diagnose-btn" style="margin-top:12px;" disabled>Diagnose Case</button>
+
+      <div class="case-preview" id="case-preview" style="display:none;">
+        <h4 id="cv-title"></h4>
+        <div class="field">
+          <div class="label-inline">Problem</div>
+          <p id="cv-problem"></p>
+        </div>
+        <div class="field">
+          <div class="label-inline">Topology</div>
+          <p id="cv-topology"></p>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <div class="label-inline">Cisco Output</div>
+          <div class="terminal">
+            <div class="terminal-bar"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-label">Switch#</span></div>
+            <pre id="cv-output"></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <h3>Or Enter Your Own Problem</h3>
+      <div class="field">
+        <label for="symptom">Network Symptom</label>
+        <textarea id="symptom" rows="3" placeholder="e.g. PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway."></textarea>
+      </div>
+      <div class="field">
+        <label for="topology">Topology Notes</label>
+        <textarea id="topology" rows="3" placeholder="e.g. PC is connected to Switch1. Switch1 connects to Router1. Server is located in VLAN 30."></textarea>
+      </div>
+      <div class="field">
+        <label for="show-output">Cisco Show Output</label>
+        <textarea id="show-output" class="mono" rows="7" placeholder="show ip interface brief&#10;show vlan brief&#10;show ip route&#10;show access-lists"></textarea>
+        <div class="field-hint">Paste raw output from one or more 'show' commands.</div>
+      </div>
+      <button class="btn btn-outline btn-block" id="manual-diagnose-btn">Analyze My Problem</button>
+      <div id="form-hint"></div>
+    </div>
+
+    <div class="notice-banner" style="margin-top:16px;">
+      <span>⚠</span>
+      <span>NetSage AI only suggests fixes — it never changes the network. A human reviewer
+      must approve, edit, or reject every diagnosis.</span>
+    </div>
+  </div>
+
+  <div id="results-column">
+    <div class="card empty-state" id="results-placeholder">
+      <p style="margin:0;">Select a case or enter a problem to see the AI diagnosis, the rule
+      checker result, and the human review step here.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/diagnose.js') }}"></script>
+{% endblock %}

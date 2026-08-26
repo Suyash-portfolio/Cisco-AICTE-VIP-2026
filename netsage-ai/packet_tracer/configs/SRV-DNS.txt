@@ -1,0 +1,12 @@
+! SRV-DNS - Internal DNS Server
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname SRV-DNS
+!
+! Packet Tracer Server-PT desktop configuration:
+! IP 192.168.10.5, mask 255.255.255.0
+! Gateway 192.168.10.1, DNS 192.168.10.5
+! DNS service: ON
+! DNS record: web.netsage.local -> 192.168.30.100
+!
+! End

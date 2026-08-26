@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}About — NetSage AI{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="eyebrow">About</div>
+  <h1>About NetSage AI</h1>
+  <p class="lede">AI + Networking + Rule-Based Checking + Human Review + Responsible AI,
+  built for Cisco Packet Tracer troubleshooting coursework.</p>
+</div>
+
+<div class="card">
+  <h3>What It Does</h3>
+  <p style="font-size:13.5px;">
+    NetSage AI is built for the Cisco problem statement:
+  </p>
+  <blockquote class="quote">
+    "Build an AI troubleshooting helper for Packet Tracer lab problems that reads symptoms
+    and show-command output, suggests likely causes and next steps, and always requires a
+    human to review before accepting the fix."
+  </blockquote>
+  <p style="font-size:13.5px;">
+    NetSage AI combines a diagnosis suggestion service (AI) with a deterministic Python
+    rule checker. The AI only uses the evidence you provide — symptom, topology, and Cisco
+    show output — and every result must be reviewed by a human.
+  </p>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>AI Mode</h3>
+  <p id="about-mode" class="field-hint" style="font-size:13.5px;">Loading...</p>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>How It Works</h3>
+  <div class="steps">
+    <div class="step"><b>Step 1.</b> User provides the network problem.</div>
+    <div class="step"><b>Step 2.</b> System checks the Cisco evidence.</div>
+    <div class="step"><b>Step 3.</b> AI suggests the likely cause.</div>
+    <div class="step"><b>Step 4.</b> Python rule checker performs deterministic checks.</div>
+    <div class="step"><b>Step 5.</b> Human reviews the result.</div>
+    <div class="step"><b>Step 6.</b> Network is fixed and verified.</div>
+  </div>
+</div>
+
+<div class="card" style="margin-top:16px;">
+  <h3>Technology</h3>
+  <p style="font-size:13.5px;margin-bottom:8px;">A simple, understandable stack for a college project:</p>
+  <div class="tech-grid">
+    <div class="tech-item"><b>Frontend</b> — HTML + CSS + JavaScript</div>
+    <div class="tech-item"><b>Backend</b> — Python Flask</div>
+    <div class="tech-item"><b>AI</b> — Demo AI + optional API</div>
+    <div class="tech-item"><b>Data</b> — CSV / JSON</div>
+    <div class="tech-item"><b>Charts</b> — Chart.js</div>
+  </div>
+</div>
+
+<section class="card" style="margin-top:16px;" id="responsible-ai">
+  <h3>Responsible AI</h3>
+  <p style="font-size:13.5px;">
+    NetSage AI does not automatically change network configurations. It only provides
+    troubleshooting recommendations. A human must review every diagnosis before accepting
+    the solution.
+  </p>
+  <p style="font-size:13px;">
+    The review log below shows <strong>5 corrected AI cases</strong> — cases where a human
+    reviewer caught an AI mistake and accepted it, edited it, or rejected it. These live in
+    <code>data/review_log.csv</code> and feed the Dashboard statistics.
+  </p>
+  <div id="correction-list">
+    <p class="field-hint">Loading corrections...</p>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/about.js') }}"></script>
+{% endblock %}

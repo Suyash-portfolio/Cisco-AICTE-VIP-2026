@@ -1,0 +1,13 @@
+! PC-USER-01 - User Workstation 1
+! Cisco Packet Tracer NetSage AI Project
+!
+! Static IP configuration (or DHCP):
+! IP: 192.168.20.10
+! Subnet Mask: 255.255.255.0
+! Gateway: 192.168.20.1
+! DNS: 192.168.10.5
+! VLAN: 20 (Users)
+!
+! This is a typical user workstation.
+!
+! End

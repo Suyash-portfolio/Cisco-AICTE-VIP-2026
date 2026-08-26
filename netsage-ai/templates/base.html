@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}NetSage AI{% endblock %}</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+{% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 12h4M17 12h4M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0Z" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/></svg>
+      </span>
+      <div>
+        <div class="brand-name">NetSage <span>AI</span></div>
+        <div class="brand-sub">Network Troubleshooting Assistant</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('home') }}" class="nav-item {{ 'active' if request.path == '/' }}">
+        <span class="nav-icon">⌂</span> Home
+      </a>
+      <a href="{{ url_for('diagnose_page') }}" class="nav-item {{ 'active' if request.path == '/diagnose' }}">
+        <span class="nav-icon">⌁</span> Diagnose
+      </a>
+      <a href="{{ url_for('cases_page') }}" class="nav-item {{ 'active' if request.path == '/cases' }}">
+        <span class="nav-icon">▦</span> Cases
+      </a>
+      <a href="{{ url_for('dashboard_page') }}" class="nav-item {{ 'active' if request.path == '/dashboard' }}">
+        <span class="nav-icon">▤</span> Dashboard
+      </a>
+      <a href="{{ url_for('about_page') }}" class="nav-item {{ 'active' if request.path == '/about' }}">
+        <span class="nav-icon">ⓘ</span> About
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="mode-pill" id="ai-mode-pill">AI MODE: —</div>
+      <p class="safety-note">Diagnostic suggestions only. A human must approve every change.</p>
+    </div>
+  </aside>
+
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">☰</button>
+
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

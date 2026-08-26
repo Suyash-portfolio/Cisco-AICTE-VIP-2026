@@ -1,0 +1,17 @@
+! R2-ISP - ISP Test Router
+! Cisco Packet Tracer NetSage AI Project
+!
+hostname R2-ISP
+!
+interface Gi0/0
+ description WAN link to R1-EDGE Gi0/1
+ ip address 203.0.113.2 255.255.255.252
+ no shutdown
+!
+interface Loopback0
+ description Internet test endpoint
+ ip address 8.8.8.8 255.255.255.255
+!
+ip route 192.168.0.0 255.255.0.0 203.0.113.1
+!
+! End

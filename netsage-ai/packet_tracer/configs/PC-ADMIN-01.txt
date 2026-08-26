@@ -1,0 +1,13 @@
+! PC-ADMIN-01 - Admin Workstation
+! Cisco Packet Tracer NetSage AI Project
+!
+! Static IP configuration:
+! IP: 192.168.10.50
+! Subnet Mask: 255.255.255.0
+! Gateway: 192.168.10.1
+! DNS: 192.168.10.5
+! VLAN: 10 (Admin)
+!
+! This PC is used for network administration.
+!
+! End

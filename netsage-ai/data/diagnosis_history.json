@@ -1,0 +1,797 @@
+[
+  {
+    "case_id": "CASE-001",
+    "timestamp": "2026-08-12T09:06:42.379751+00:00",
+    "input": {
+      "symptom": "PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.",
+      "topology_note": "PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.",
+      "show_output": "show vlan brief\nVLAN Name Status Ports\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1\nshow interfaces trunk\nPort Mode Encapsulation Status Native vlan\nFa0/1 on 802.1q trunking 1",
+      "case_type": "VLAN",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-019",
+    "timestamp": "2026-08-12T09:06:51.373212+00:00",
+    "input": {
+      "symptom": "Internal users cannot reach the internet even though the NAT and ACL rules look correct on paper.",
+      "topology_note": "ACL 101 meant to filter outbound internet traffic on Serial0/1/0.",
+      "show_output": "show run interface Serial0/1/0\nip access-group 101 in\n(ACL 101 was designed for traffic leaving the router, should be applied 'out' or reversed)",
+      "case_type": "ACL",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "ACL Applied in Wrong Direction",
+          "severity": "High",
+          "evidence": "ACL is applied in the wrong direction ('in' vs 'out') relative to the traffic it should filter.",
+          "recommendation": "Re-apply the access-group in the correct direction on the interface."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Access control list (ACL) problem - the ACL is blocking the wrong traffic or filtering the wrong range.",
+      "confidence": "High",
+      "evidence": [
+        "The ACL is applied inbound on the interface it filters.",
+        "Rule checker flagged: ACL Applied in Wrong Direction (High)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show access-lists",
+      "fix_steps": [
+        "Review the ACL for overly broad deny statements.",
+        "Confirm the ACL is on the correct interface and direction.",
+        "Correct the wildcard mask if needed."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show access-lists",
+        "ping/traceroute the affected path"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Accepted"
+  },
+  {
+    "case_id": "CASE-001",
+    "timestamp": "2026-08-12T09:07:57.178452+00:00",
+    "input": {
+      "symptom": "PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.",
+      "topology_note": "PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.",
+      "show_output": "show vlan brief\nVLAN Name Status Ports\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1\nshow interfaces trunk\nPort Mode Encapsulation Status Native vlan\nFa0/1 on 802.1q trunking 1",
+      "case_type": "VLAN",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-001",
+    "timestamp": "2026-08-12T09:07:58.579255+00:00",
+    "input": {
+      "symptom": "PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.",
+      "topology_note": "PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.",
+      "show_output": "show vlan brief\nVLAN Name Status Ports\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1\nshow interfaces trunk\nPort Mode Encapsulation Status Native vlan\nFa0/1 on 802.1q trunking 1",
+      "case_type": "VLAN",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-021",
+    "timestamp": "2026-08-12T09:08:07.860729+00:00",
+    "input": {
+      "symptom": "Wi-Fi in the office is connected but extremely slow and drops frequently during business hours.",
+      "topology_note": "Three APs (AP1, AP2, AP3) cover adjacent areas of the same floor.",
+      "show_output": "AP1 channel: 6\nAP2 channel: 6\nAP3 channel: 6\n(all APs using the same 2.4GHz channel, high co-channel interference)",
+      "case_type": "Wireless",
+      "severity_hint": "Low"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Wireless Channel Overlap",
+          "severity": "Low",
+          "evidence": "Multiple access points are configured on the same channel.",
+          "recommendation": "Configure adjacent APs on non-overlapping channels (e.g. 1, 6, 11)."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wireless problem - Wi-Fi association or coverage configuration is wrong.",
+      "confidence": "Medium",
+      "evidence": [
+        "Multiple access points are using the same channel (co-channel interference).",
+        "Rule checker flagged: Wireless Channel Overlap (Low)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show wireless client / AP config",
+      "fix_steps": [
+        "Match the client security profile to the AP security settings.",
+        "Re-enable SSID broadcast if clients must see the network.",
+        "Use non-overlapping channels on nearby access points."
+      ],
+      "severity": "Medium",
+      "verification_steps": [
+        "Reconnect the client and confirm association",
+        "Run a wireless site survey"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-031",
+    "timestamp": "2026-08-12T09:13:11.217152+00:00",
+    "input": {
+      "symptom": "PCs in VLAN 20 can ping each other but cannot reach their default gateway or any other subnet.",
+      "topology_note": "VLAN 20 subnet is 192.168.20.0/24. Router1 SVI Vlan20 is 192.168.20.1.",
+      "show_output": "ipconfig /all\nIPv4 Address: 192.168.20.10\nSubnet Mask: 255.255.255.0\nDefault Gateway: 192.168.30.1\nRouter1 show ip interface brief -> Vlan20 192.168.20.1 up up",
+      "case_type": "Gateway",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Gateway Mismatch",
+          "severity": "High",
+          "evidence": "Host IP (192.168.20.10) and default gateway (192.168.30.1) are on different /24 subnets.",
+          "recommendation": "Correct the default gateway so it resides on the same subnet as the host, or fix the host's IP/mask configuration."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Default gateway problem - the host's gateway does not match the router address for its subnet.",
+      "confidence": "Medium",
+      "evidence": [
+        "The configured default gateway does not match the router SVI for the host's subnet.",
+        "The host (192.168.20.10) and its default gateway (192.168.30.1) are on different /24 subnets.",
+        "Rule checker flagged: Gateway Mismatch (High)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip interface brief",
+      "fix_steps": [
+        "Confirm the correct gateway IP for the host's subnet.",
+        "Update the host's default gateway (static config or DHCP).",
+        "Renew the host's IP configuration if it uses DHCP.",
+        "Ping the gateway to confirm."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "ipconfig /all",
+        "ping <default-gateway>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-020",
+    "timestamp": "2026-08-13T03:51:05.291677+00:00",
+    "input": {
+      "symptom": "During peak hours, some internal users lose internet access while others remain connected.",
+      "topology_note": "Router1 uses a NAT pool (not overload) for translating internal addresses.",
+      "show_output": "show ip nat statistics\nTotal active translations: 20 (20 static, 0 dynamic; 0 extended)\nPool NAT-POOL: netmask 255.255.255.240\n start 203.0.113.10 end 203.0.113.20\n total addresses 11 allocated 11 (100%) misses 47",
+      "case_type": "NAT",
+      "severity_hint": "Medium"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Incorrect Subnet Mask",
+          "severity": "High",
+          "evidence": "A non-standard or mismatched subnet mask was found relative to the expected network size.",
+          "recommendation": "Correct the mask on the host or interface so it matches the rest of the VLAN/subnet."
+        },
+        {
+          "type": "NAT Pool Exhausted",
+          "severity": "Medium",
+          "evidence": "The NAT pool is fully allocated (all addresses in use).",
+          "recommendation": "Increase the pool size or switch to PAT/overload to share addresses."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "NAT problem - address translation is not working as expected.",
+      "confidence": "Medium",
+      "evidence": [
+        "The NAT pool is fully allocated (11/11, 100%).",
+        "Rule checker flagged: Incorrect Subnet Mask (High).",
+        "Rule checker flagged: NAT Pool Exhausted (Medium)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip nat statistics",
+      "fix_steps": [
+        "Confirm 'ip nat inside' / 'ip nat outside' on the correct interfaces.",
+        "Check the NAT pool size against the number of hosts.",
+        "Remove duplicate static NAT mappings."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip nat translations",
+        "ping 8.8.8.8 from an internal host"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-014",
+    "timestamp": "2026-08-13T06:16:19.164610+00:00",
+    "input": {
+      "symptom": "Inter-VLAN routing fails for VLAN 30 only; VLAN 10 and VLAN 20 route correctly.",
+      "topology_note": "Router1 Gi0/0 has subinterfaces Gi0/0.10, Gi0/0.20, Gi0/0.30 for router-on-a-stick.",
+      "show_output": "show run interface Gi0/0.30\nencapsulation dot1Q 3\nip address 192.168.30.1 255.255.255.0",
+      "case_type": "Routing",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Incorrect dot1Q Tag",
+          "severity": "High",
+          "evidence": "Subinterface gi0/0.30 is tagging frames with dot1Q 3 instead of 30.",
+          "recommendation": "Correct the encapsulation under the subinterface to match its VLAN: 'encapsulation dot1Q <expected-vlan>'."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Routing problem - a route or a routing-related interface is missing or misconfigured.",
+      "confidence": "High",
+      "evidence": [
+        "Subinterface 30 is tagging frames with dot1Q 3 instead of dot1Q 30.",
+        "Rule checker flagged: Incorrect dot1Q Tag (High)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip route",
+      "fix_steps": [
+        "Check whether the destination subnet appears in 'show ip route'.",
+        "Add the missing route or fix the routing protocol / interface.",
+        "Confirm the affected interface is up."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip route",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Accepted"
+  },
+  {
+    "case_id": "CASE-001",
+    "timestamp": "2026-08-13T06:24:46.418574+00:00",
+    "input": {
+      "symptom": "PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.",
+      "topology_note": "PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.",
+      "show_output": "show vlan brief\nVLAN Name Status Ports\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1\nshow interfaces trunk\nPort Mode Encapsulation Status Native vlan\nFa0/1 on 802.1q trunking 1",
+      "case_type": "VLAN",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-005",
+    "timestamp": "2026-08-13T06:29:16.013234+00:00",
+    "input": {
+      "symptom": "HQ site cannot reach Branch site subnet 172.16.20.0/24, but the WAN link is up.",
+      "topology_note": "R1 (HQ) <-> Serial link <-> R2 (Branch). R2 LAN = 172.16.20.0/24.",
+      "show_output": "show ip route\nGateway of last resort is not set\nC 172.16.10.0/24 is directly connected, GigabitEthernet0/0\nC 10.0.0.0/30 is directly connected, Serial0/0/0\n(No route to 172.16.20.0/24)",
+      "case_type": "Routing",
+      "severity_hint": "Critical"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing Route",
+          "severity": "Critical",
+          "evidence": "Destination network is not present in the routing table.",
+          "recommendation": "Add a static route or verify the routing protocol is advertising the destination subnet correctly."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Routing problem - a route or a routing-related interface is missing or misconfigured.",
+      "confidence": "High",
+      "evidence": [
+        "The routing table has no entry for the destination subnet.",
+        "The routing table has no default route (gateway of last resort).",
+        "Rule checker flagged: Missing Route (Critical)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip route",
+      "fix_steps": [
+        "Check whether the destination subnet appears in 'show ip route'.",
+        "Add the missing route or fix the routing protocol / interface.",
+        "Confirm the affected interface is up."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip route",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Accepted"
+  },
+  {
+    "case_id": "CASE-005",
+    "timestamp": "2026-08-13T06:29:19.471323+00:00",
+    "input": {
+      "symptom": "HQ site cannot reach Branch site subnet 172.16.20.0/24, but the WAN link is up.",
+      "topology_note": "R1 (HQ) <-> Serial link <-> R2 (Branch). R2 LAN = 172.16.20.0/24.",
+      "show_output": "show ip route\nGateway of last resort is not set\nC 172.16.10.0/24 is directly connected, GigabitEthernet0/0\nC 10.0.0.0/30 is directly connected, Serial0/0/0\n(No route to 172.16.20.0/24)",
+      "case_type": "Routing",
+      "severity_hint": "Critical"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing Route",
+          "severity": "Critical",
+          "evidence": "Destination network is not present in the routing table.",
+          "recommendation": "Add a static route or verify the routing protocol is advertising the destination subnet correctly."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Routing problem - a route or a routing-related interface is missing or misconfigured.",
+      "confidence": "High",
+      "evidence": [
+        "The routing table has no entry for the destination subnet.",
+        "The routing table has no default route (gateway of last resort).",
+        "Rule checker flagged: Missing Route (Critical)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip route",
+      "fix_steps": [
+        "Check whether the destination subnet appears in 'show ip route'.",
+        "Add the missing route or fix the routing protocol / interface.",
+        "Confirm the affected interface is up."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip route",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-005",
+    "timestamp": "2026-08-18T05:20:24.412170+00:00",
+    "input": {
+      "symptom": "HQ site cannot reach Branch site subnet 172.16.20.0/24, but the WAN link is up.",
+      "topology_note": "R1 (HQ) <-> Serial link <-> R2 (Branch). R2 LAN = 172.16.20.0/24.",
+      "show_output": "show ip route\nGateway of last resort is not set\nC 172.16.10.0/24 is directly connected, GigabitEthernet0/0\nC 10.0.0.0/30 is directly connected, Serial0/0/0\n(No route to 172.16.20.0/24)",
+      "case_type": "Routing",
+      "severity_hint": "Critical"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing Route",
+          "severity": "Critical",
+          "evidence": "Destination network is not present in the routing table.",
+          "recommendation": "Add a static route or verify the routing protocol is advertising the destination subnet correctly."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Routing problem - a route or a routing-related interface is missing or misconfigured.",
+      "confidence": "High",
+      "evidence": [
+        "The routing table has no entry for the destination subnet.",
+        "The routing table has no default route (gateway of last resort).",
+        "Rule checker flagged: Missing Route (Critical)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip route",
+      "fix_steps": [
+        "Check whether the destination subnet appears in 'show ip route'.",
+        "Add the missing route or fix the routing protocol / interface.",
+        "Confirm the affected interface is up."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip route",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending"
+  },
+  {
+    "case_id": "CASE-001",
+    "timestamp": "2026-08-26T06:42:56.773482+00:00",
+    "input": {
+      "symptom": "PC gets an IP address but cannot reach the server in VLAN 30. The PC can ping its default gateway.",
+      "topology_note": "PC connected to Switch1 Fa0/2 (VLAN 10). Switch1 trunk to Router1 Fa0/0. Server in VLAN 30 on Switch1 Fa0/5.",
+      "show_output": "show vlan brief\nVLAN Name Status Ports\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1\nshow interfaces trunk\nPort Mode Encapsulation Status Native vlan\nFa0/1 on 802.1q trunking 1",
+      "case_type": "VLAN",
+      "severity_hint": "High"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending",
+    "packet_tracer_case_id": "",
+    "packet_tracer_device": "",
+    "packet_tracer_command_evidence": "",
+    "packet_tracer_verification_result": ""
+  },
+  {
+    "case_id": "CASE-93117F8F",
+    "timestamp": "2026-08-26T06:42:56.777950+00:00",
+    "input": {
+      "symptom": "PC gets IP but cannot reach server in VLAN 30",
+      "topology_note": "PC on VLAN 10, server in VLAN 30",
+      "show_output": "show vlan brief\n10 Data active Fa0/2\n30 Servers active Fa0/5\n\nswitchport access vlan 30 command missing on Fa0/5 - port shows VLAN 1",
+      "case_type": "",
+      "severity_hint": ""
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN Assignment",
+          "severity": "Medium",
+          "evidence": "Port is still associated with default VLAN 1 instead of the intended VLAN.",
+          "recommendation": "Apply 'switchport access vlan <id>' on the port to assign the correct VLAN."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "High",
+      "evidence": [
+        "The switch output shows the port still in VLAN 1 (default VLAN).",
+        "The output notes that 'switchport access vlan 30' is missing on the server port.",
+        "Rule checker flagged: Missing VLAN Assignment (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending",
+    "packet_tracer_case_id": "",
+    "packet_tracer_device": "",
+    "packet_tracer_command_evidence": "",
+    "packet_tracer_verification_result": ""
+  },
+  {
+    "case_id": "CASE-004",
+    "timestamp": "2026-08-26T07:13:21.665141+00:00",
+    "input": {
+      "symptom": "Users can ping the web server by IP address but cannot browse to it using its hostname.",
+      "topology_note": "PC on VLAN 10, DNS server configured as 8.8.8.8 in the DHCP scope but internal DNS is 192.168.10.5.",
+      "show_output": "ipconfig /all\nDNS Servers: 8.8.8.8\nnslookup intranet.local\n*** 8.8.8.8 can't find intranet.local: Non-existent domain",
+      "case_type": "DNS",
+      "severity_hint": "Medium"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "DNS Resolution Failure",
+          "severity": "Medium",
+          "evidence": "Hostname resolution fails (non-existent domain) even though access by IP address works.",
+          "recommendation": "Point the client at the correct internal DNS server and verify Layer 3 reachability to it."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "DNS problem - hostname resolution is failing.",
+      "confidence": "High",
+      "evidence": [
+        "The DNS lookup fails with 'non-existent domain', but IP-based access works.",
+        "The configured DNS server cannot resolve the internal hostname.",
+        "Rule checker flagged: DNS Resolution Failure (Medium)."
+      ],
+      "osi_layer": "Layer 7",
+      "next_command": "nslookup <internal-hostname>",
+      "fix_steps": [
+        "Confirm the correct internal DNS server address.",
+        "Point the DHCP scope (or static config) at the right DNS server.",
+        "Verify Layer 3 reachability to the DNS server."
+      ],
+      "severity": "Medium",
+      "verification_steps": [
+        "nslookup <hostname>",
+        "ping <dns-server-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending",
+    "packet_tracer_case_id": "",
+    "packet_tracer_device": "",
+    "packet_tracer_command_evidence": "",
+    "packet_tracer_verification_result": ""
+  },
+  {
+    "case_id": "CASE-013",
+    "timestamp": "2026-08-26T14:39:26.593524+00:00",
+    "input": {
+      "symptom": "New VLAN 40 (Guest) created for a project, but guest devices cannot reach the guest DHCP server on the other switch.",
+      "topology_note": "Switch1 and Switch2 connected via trunk Gi0/2. VLAN 40 created on both switches.",
+      "show_output": "show interfaces trunk\nPort Vlans allowed on trunk\nGi0/2 1,10,20,30",
+      "case_type": "VLAN",
+      "severity_hint": "Medium"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing VLAN on Trunk",
+          "severity": "Medium",
+          "evidence": "The trunk's allowed-VLAN list does not include every VLAN that must cross the link.",
+          "recommendation": "Add the missing VLAN to the trunk with 'switchport trunk allowed vlan add <id>'."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Wrong VLAN assignment - a switch port is in the wrong VLAN or the VLAN is not carried across the link.",
+      "confidence": "Medium",
+      "evidence": [
+        "The trunk's allowed-VLAN list does not include the VLAN that must cross the link.",
+        "Rule checker flagged: Missing VLAN on Trunk (Medium)."
+      ],
+      "osi_layer": "Layer 2",
+      "next_command": "show vlan brief",
+      "fix_steps": [
+        "Find the affected switch port.",
+        "Assign it to the correct VLAN with 'switchport access vlan <id>'.",
+        "Check the VLAN again with 'show vlan brief'.",
+        "Test connectivity from the affected host."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show vlan brief",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending",
+    "packet_tracer_case_id": "",
+    "packet_tracer_device": "",
+    "packet_tracer_command_evidence": "",
+    "packet_tracer_verification_result": ""
+  },
+  {
+    "case_id": "CASE-005",
+    "timestamp": "2026-08-26T14:40:21.140287+00:00",
+    "input": {
+      "symptom": "HQ site cannot reach Branch site subnet 172.16.20.0/24, but the WAN link is up.",
+      "topology_note": "R1 (HQ) <-> Serial link <-> R2 (Branch). R2 LAN = 172.16.20.0/24.",
+      "show_output": "show ip route\nGateway of last resort is not set\nC 172.16.10.0/24 is directly connected, GigabitEthernet0/0\nC 10.0.0.0/30 is directly connected, Serial0/0/0\n(No route to 172.16.20.0/24)",
+      "case_type": "Routing",
+      "severity_hint": "Critical"
+    },
+    "rule_checker_result": {
+      "issues_found": true,
+      "issues": [
+        {
+          "type": "Missing Route",
+          "severity": "Critical",
+          "evidence": "Destination network is not present in the routing table.",
+          "recommendation": "Add a static route or verify the routing protocol is advertising the destination subnet correctly."
+        }
+      ]
+    },
+    "ai_result": {
+      "root_cause": "Routing problem - a route or a routing-related interface is missing or misconfigured.",
+      "confidence": "High",
+      "evidence": [
+        "The routing table has no entry for the destination subnet.",
+        "The routing table has no default route (gateway of last resort).",
+        "Rule checker flagged: Missing Route (Critical)."
+      ],
+      "osi_layer": "Layer 3",
+      "next_command": "show ip route",
+      "fix_steps": [
+        "Check whether the destination subnet appears in 'show ip route'.",
+        "Add the missing route or fix the routing protocol / interface.",
+        "Confirm the affected interface is up."
+      ],
+      "severity": "High",
+      "verification_steps": [
+        "show ip route",
+        "ping <destination-ip>"
+      ],
+      "mode": "demo"
+    },
+    "review_status": "Pending",
+    "packet_tracer_case_id": "",
+    "packet_tracer_device": "",
+    "packet_tracer_command_evidence": "",
+    "packet_tracer_verification_result": ""
+  }
+]

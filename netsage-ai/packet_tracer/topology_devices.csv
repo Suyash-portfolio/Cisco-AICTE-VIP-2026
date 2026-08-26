@@ -1,0 +1,29 @@
+device_name,device_type,interface,connected_to,ip_address,subnet_mask,vlan,purpose
+R1-EDGE,Router,Gi0/0,SW1-CORE Gi0/1,,, ,Trunk to core switch
+R1-EDGE,Router,Gi0/0.10,802.1Q VLAN 10,192.168.10.1,255.255.255.0,10,Admin gateway
+R1-EDGE,Router,Gi0/0.20,802.1Q VLAN 20,192.168.20.1,255.255.255.0,20,Users gateway
+R1-EDGE,Router,Gi0/0.30,802.1Q VLAN 30,192.168.30.1,255.255.255.0,30,Servers gateway
+R1-EDGE,Router,Gi0/0.40,802.1Q VLAN 40,192.168.40.1,255.255.255.0,40,Guest gateway
+R1-EDGE,Router,Gi0/0.50,802.1Q VLAN 50,192.168.50.1,255.255.255.0,50,Management gateway
+R1-EDGE,Router,Gi0/1,R2-ISP Gi0/0,203.0.113.1,255.255.255.252,,WAN link
+R2-ISP,Router,Gi0/0,R1-EDGE Gi0/1,203.0.113.2,255.255.255.252,,WAN link
+R2-ISP,Router,Loopback0,Test endpoint,8.8.8.8,255.255.255.255,,Internet test loopback
+SW1-CORE,Switch,Fa0/1,PC-ADMIN-01,,,10,Admin workstation
+SW1-CORE,Switch,Fa0/2,PC-USER-01,,,20,User workstation
+SW1-CORE,Switch,Fa0/3,PC-USER-02,,,20,User workstation
+SW1-CORE,Switch,Fa0/4,SRV-DNS,,,10,DNS server
+SW1-CORE,Switch,Fa0/5,SRV-WEB,,,30,Web server
+SW1-CORE,Switch,Fa0/6,PC-GUEST-01,,,40,Guest workstation
+SW1-CORE,Switch,Gi0/1,R1-EDGE Gi0/0,Trunk,Trunk,,Router trunk
+SW1-CORE,Switch,Gi0/2,SW2-ACCESS Gi0/1,Trunk,Trunk,,Access-switch trunk
+SW1-CORE,Switch,Gi0/3,SW3-ACCESS Gi0/1,Trunk,Trunk,,Access-switch trunk
+SW1-CORE,Switch,Gi0/24,AP1-GUEST Gi0/0,Access,,40,Guest AP access port
+SW2-ACCESS,Switch,Gi0/1,SW1-CORE Gi0/2,Trunk,Trunk,,Uplink trunk
+SW3-ACCESS,Switch,Gi0/1,SW1-CORE Gi0/3,Trunk,Trunk,,Uplink trunk
+AP1-GUEST,Wireless-AP,Gi0/0,SW1-CORE Gi0/24,,,40,Guest wireless AP
+SRV-DNS,Server,FastEthernet0,SW1-CORE Fa0/4,192.168.10.5,255.255.255.0,10,DNS Server-PT; DNS ON; web.netsage.local -> 192.168.30.100
+SRV-WEB,Server,FastEthernet0,SW1-CORE Fa0/5,192.168.30.100,255.255.255.0,30,Web Server-PT; HTTP ON
+PC-ADMIN-01,PC,FastEthernet0,SW1-CORE Fa0/1,192.168.10.50,255.255.255.0,10,Admin workstation
+PC-USER-01,PC,FastEthernet0,SW1-CORE Fa0/2,192.168.20.10,255.255.255.0,20,User workstation
+PC-USER-02,PC,FastEthernet0,SW1-CORE Fa0/3,192.168.20.20,255.255.255.0,20,User workstation
+PC-GUEST-01,PC,FastEthernet0,SW1-CORE Fa0/6,192.168.40.10,255.255.255.0,40,Guest workstation
